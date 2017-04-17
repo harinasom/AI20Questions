@@ -314,3 +314,119 @@ void setupGameData()
 } //end of animal characteristics 
 
 //Game Setup Screen View
+void startGame()
+{
+  char buffer[ BUFFER_SIZE ];
+  int  index;
+  
+  printf(" -----------------------------------------------\n ");
+  printf("       Welcome To The 20 Questions Game              \n");
+  printf(" -----------------------------------------------\n ");
+  printf("To exit please enter '%s'\n" , EXIT_KEY);
+  
+  printf(" Please choose an animal from the list:\n\n");
+  for ( index = 0; index < TOTAL_ANIMALS; index++ )
+  {
+     printf( "%s ", animals_list[ index ] );
+     printf( "\n\nType in '%s' when you're ready and I will try to guess the animal : ", CONTINUE_KEY);
+     scanf( "%s", buffer );
+  }
+  
+  if ( strcmp( buffer, EXIT_KEY ) == 0 )
+  exit(0);
+  
+  while ( strcmp( buffer, CONTINUE_KEY ) != 0 )
+   {
+     printf("\nWrong"); 
+     printf( "\n\nType in '%s' when you're ready and I will try to guess the animal : ", CONTINUE_KEY );
+     scanf( "%s", buffer );
+     if ( strcmp( buffer, EXIT_KEY ) == 0 )
+     exit(0);
+   }
+   
+   if ( DEBUG_STATUS )
+    {
+      for ( index = 0; index < TOTAL_ANIMALS; index++ )
+      {
+       printf( "%s: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d \n", animals_list[ index ], mammals[ index ],     flying_animals[ index ], water_animals[ index ], beak[ index ], nocturnal_animals[ index ], shell_animals[ index ], slithering_animals[ index ], whiskers[ index ], paws[ index ], stripes[ index ], fur[ index ], fourlegged_animals[ index ], stinging_animals[ index ], tail[ index ], scales[ index ], carnivores[ index ], spots[ index ], gills[ index ], horns[ index ], feathers[ index ] );
+      }
+    }
+    
+// user questions
+void askUserQuestion( int guessNumber, char question, int animalData )
+{
+  char buffer[ BUFFER_SIZE ];
+  int  index;
+  printf( question, guessNumber );
+  printf( "Type '%s' if that's correct or '%s' if its wrong: ", YES_KEY, NO_KEY );
+  //wait
+  scanf( "%s", buffer );
+  if ( strcmp( buffer, EXIT_KEY ) == 0 )
+  exit(0);
+  
+  while ( !(strcmp( buffer, YES_KEY ) == 0 || strcmp( buffer, NO_KEY ) == 0) )
+  {
+   printf("\nPlease enter either yes, no or exit\n");
+   printf( question, guessNumber );
+   printf( "Type '%s' if that's correct or '%s' if its wrong: ", YES_KEY, NO_KEY );
+   scanf( "%s", buffer );
+   if ( strcmp( buffer, EXIT_KEY ) == 0 )
+   exit(0);
+  }
+  
+  for ( index = 0; index < TOTAL_ANIMALS; index++ )
+  {
+   if ( animals_list[ index ] != NULL )
+   {
+     if ( strcmp( buffer, YES_KEY ) == 0 )
+     {
+      if ( animalData[ index ] != 1 )
+        animals_list[ index ] = NULL;
+     }
+     else
+     {
+      if ( animalData[ index ] == 1 )
+        animals_list[ index ] = NULL;
+     }
+   }
+  }
+}
+
+//display animals
+void displayRemainingAnimals()
+{
+  int index;
+  printf( "\nAnimals remaining: " );
+  for ( index = 0; index < TOTAL_ANIMALS; index++ )
+  {
+   if ( animals_list[ index ] != NULL )
+     printf( "%s ", animals_list[ index ] );
+  }
+  printf( "\n" );
+}
+
+int countRemainingAnimals()
+{
+  int animals_remaining = 0;
+  int index;
+
+  for ( index = 0; index < TOTAL_ANIMALS; index++ )
+  {
+   if ( animals_list[ index ] != NULL )
+     animals_remaining++;
+  }
+  return animals_remaining;
+}
+
+char findLastAnimal()
+{
+  int index;
+
+  for ( index = 0; index < TOTAL_ANIMALS; index++ )
+  {
+   if ( animals_list[ index ] != NULL )
+     return animals_list[ index ];
+  }
+
+  return NULL;
+}
